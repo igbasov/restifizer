@@ -5,6 +5,7 @@
 
 var Mission = require('../models/mission');
 var BaseController = require('./base');
+var Bb = require('bluebird');
 
 module.exports = BaseController.extend({
     dataSource: {
@@ -23,7 +24,14 @@ module.exports = BaseController.extend({
         '_id',
         'description'
     ],
-    queryPipe: function (query, scope, callback) {
-        return query.populate("agent", callback);
+    queryPipe: function (query, scope) {
+      if (scope.isUpdate() || scope.isInsert()) {
+        return Bb.
+          fromNode(function (callback) {
+            return query.populate("agent", callback);
+          });
+      } else {
+        return query.populate("agent");
+      }
     }
 });
