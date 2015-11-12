@@ -18,7 +18,14 @@ module.exports = BaseController.extend({
     fields: [
         '_id',
         'description',
-        'agent'
+        {
+          name: 'agent',
+          fields: [
+            'name',
+            'lastName',
+            '_id'
+          ]
+        }
     ],
     qFields: [
         '_id',
@@ -30,8 +37,6 @@ module.exports = BaseController.extend({
           fromNode(function (callback) {
             return query.populate("agent", callback);
           });
-      } else {
-        return query.populate("agent");
       }
     }
 });
